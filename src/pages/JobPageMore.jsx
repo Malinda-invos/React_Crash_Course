@@ -1,27 +1,22 @@
-// import { React, useEffect, useState } from "react";
-import { useParams, useLoaderData, Link } from "react-router-dom";
+import { useLoaderData, Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaMapMarkerAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
 
-const JobPageMore = () => {
-  const { id } = useParams();
+const JobPageMore = ({ deleteJob }) => {
   const job = useLoaderData();
-  //   const [job, setJob] = useState(null);
-  //   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  //   useEffect(() => {
-  //     const fetchJobs = async () => {
-  //       try {
-  //         const res = await fetch(`/api/jobs/${id}`);
-  //         const data = await res.json();
-  //         setJob(data);
-  //       } catch (err) {
-  //         console.log("Error Fetching Data " + err);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-  //     fetchJobs();
-  //   }, []);
+  const onDelectClick = (id) => {
+    const confirm = window.confirm("Are you sure you want to delete this job?");
+    if (!confirm) {
+      return;
+    }
+    deleteJob(id);
+    toast.success("Job Added Successfully", {
+      autoClose: 8000,
+    });
+    // navigate("/jobs");
+  };
   return (
     <>
       <section>
@@ -101,12 +96,15 @@ const JobPageMore = () => {
               <div className="bg-white p-6 rounded-lg shadow-md mt-6">
                 <h3 className="text-xl font-bold mb-6">Manage Job</h3>
                 <Link
-                  to={`/jobs/edit/${job.id}`}
+                  to={`/edit-jobs/${job.id}`}
                   className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
                 >
                   Edit Job
                 </Link>
-                <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">
+                <button
+                  onClick={() => onDelectClick(job.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                >
                   Delete Job
                 </button>
               </div>
@@ -125,3 +123,20 @@ const jobLoader = async ({ params }) => {
 };
 
 export { JobPageMore as default, jobLoader };
+//   const [job, setJob] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     const fetchJobs = async () => {
+//       try {
+//         const res = await fetch(`/api/jobs/${id}`);
+//         const data = await res.json();
+//         setJob(data);
+//       } catch (err) {
+//         console.log("Error Fetching Data " + err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchJobs();
+//   }, []);
